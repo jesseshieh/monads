@@ -4,7 +4,7 @@ module Monad
       @block = block
     end
 
-    def self.from_value(value)
+    def self.lift(value)
       Eventually.new do
         value
       end

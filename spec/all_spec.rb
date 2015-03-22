@@ -3,15 +3,15 @@ require 'applicative_functor'
 require 'functor'
 require 'monad'
 
-fail unless Monad::Maybe.from_value(1).bind do |value|
-  Monad::Maybe.from_value(value + 1)
+fail unless Monad::Maybe.lift(1).bind do |value|
+  Monad::Maybe.lift(value + 1)
 end.value == 2
 
-fail unless Monad::Maybe.from_value(nil).bind do |value|
-  Monad::Maybe.from_value(value + 1)
+fail unless Monad::Maybe.lift(nil).bind do |value|
+  Monad::Maybe.lift(value + 1)
 end.value == nil
 
-fail unless Monad::Maybe.from_value(1).value == 1
+fail unless Monad::Maybe.lift(1).value == 1
 
 
 fail unless Monad::Many.new([1, 2, 3]).bind do |i|
@@ -20,27 +20,27 @@ end.value == [10, 100, 20, 200, 30, 300]
 fail unless Monad::Many.new([]).value == []
 
 
-fail unless Monad::Either.from_value(1).value == 1
-fail unless Monad::Either.from_value(-1).bind do |value|
+fail unless Monad::Either.lift(1).value == 1
+fail unless Monad::Either.lift(-1).bind do |value|
   Monad::Either::Failure.new("Must be positive.")
 end.value == "Must be positive."
-fail unless Monad::Either.from_value(1).bind do |value|
+fail unless Monad::Either.lift(1).bind do |value|
   Monad::Either::Success.new(value + 1)
 end.value == 2
-fail unless Monad::Either.from_value(1).bind do |value|
+fail unless Monad::Either.lift(1).bind do |value|
   Monad::Either::Failure.new("Must be positive.")
 end.bind do |value|
   Monad::Either::Success.new(value + 1)
 end.value == "Must be positive."
 
 
-fail unless Monad::Eventually.from_value(1).value == 1
-fail unless Monad::Eventually.from_value(1).bind do |value|
+fail unless Monad::Eventually.lift(1).value == 1
+fail unless Monad::Eventually.lift(1).bind do |value|
   Monad::Eventually.new do
     value + 1
   end
 end.value == 2
-fail unless Monad::Eventually.from_value(1).bind do |value|
+fail unless Monad::Eventually.lift(1).bind do |value|
   Monad::Eventually.new do
     value + 1
   end
@@ -63,7 +63,7 @@ pop = ->(stack) {
   [value, stack]
 }
 
-fail unless Monad::State.from_value(1).run([]) == [1, []]
+fail unless Monad::State.lift(1).run([]) == [1, []]
 fail unless Monad::State.new(&push(4)).bind(&pop).bind(&pop).bind(&push(5)).
   run([1, 2, 3]) == [nil, [1, 2, 5]]
 

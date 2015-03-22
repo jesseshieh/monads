@@ -31,7 +31,7 @@ module Monad
 
     attr_reader :value
 
-    def self.from_value(value)
+    def self.lift(value)
       Either.new(Success.new(value))
     end
 

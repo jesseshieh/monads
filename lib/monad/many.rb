@@ -4,7 +4,7 @@ module Monad
       @value = values
     end
 
-    def self.from_value(value)
+    def self.lift(value)
       Many.new([value])
     end
 

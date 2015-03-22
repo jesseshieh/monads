@@ -4,7 +4,7 @@ module Monad
       @value = value
     end
 
-    def self.from_value(value)
+    def self.lift(value)
       Maybe.new value
     end
 
