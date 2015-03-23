@@ -18,14 +18,14 @@ module Monad
 
     def fmap(proc)
       State.new ->(s) {
-        result, new_state = @value.call(s)
+        result, new_state = run(s)
         [proc.call(result), new_state]
       }
     end
 
     def apply(state)
       State.new ->(s) {
-        proc, new_state = @value.call(s)
+        proc, new_state = run(s)
         state.fmap(proc).run(new_state)
       }
     end

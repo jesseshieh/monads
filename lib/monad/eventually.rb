@@ -14,19 +14,25 @@ module Monad
       }
     end
 
-    def bind(&block)
-      Eventually.new -> {
-        block.call(@value.call).value
-      }
-    end
-
     def fmap(proc)
       Eventually.new -> {
-        proc.call(@value.call)
+        proc.call(run)
       }
     end
 
-    def value
+    def apply(eventually)
+      Eventually.new -> {
+        eventually.fmap(run).run
+      }
+    end
+
+    def bind(&block)
+      Eventually.new -> {
+        block.call(run).run
+      }
+    end
+
+    def run
       @value.call
     end
   end
