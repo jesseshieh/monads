@@ -15,9 +15,18 @@ module Monad
     end
 
     def fmap(proc)
-      Eventually.new -> {
-        proc.call(run)
-      }
+      value = run
+      if value.is_a? Proc
+        Eventually.new -> {
+          ->(x) {
+            value.call(proc.call(x))
+          }
+        }
+      else
+        Eventually.new -> {
+          proc.call(value)
+        }
+      end
     end
 
     def apply(eventually)
