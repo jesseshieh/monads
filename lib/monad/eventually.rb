@@ -1,24 +1,33 @@
+require 'applicative_functor'
+
 module Monad
   class Eventually
-    def initialize(&block)
-      @block = block
+    include ApplicativeFunctor
+
+    def initialize(value)
+      @value = value
     end
 
     def self.lift(value)
-      Eventually.new do
+      Eventually.new -> {
         value
-      end
+      }
     end
 
     def bind(&block)
-      Eventually.new do
-        result = @block.call
-        block.call(result).value
-      end
+      Eventually.new -> {
+        block.call(@value.call).value
+      }
+    end
+
+    def fmap(proc)
+      Eventually.new -> {
+        proc.call(@value.call)
+      }
     end
 
     def value
-      @block.call
+      @value.call
     end
   end
 end
