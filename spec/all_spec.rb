@@ -3,19 +3,6 @@ require 'applicative_functor'
 require 'functor'
 require 'monad'
 
-fail unless Monad::Either.lift(1).value == 1
-fail unless Monad::Either.lift(-1).bind do |value|
-  Monad::Either::Failure.new("Must be positive.")
-end.value == "Must be positive."
-fail unless Monad::Either.lift(1).bind do |value|
-  Monad::Either::Success.new(value + 1)
-end.value == 2
-fail unless Monad::Either.lift(1).bind do |value|
-  Monad::Either::Failure.new("Must be positive.")
-end.bind do |value|
-  Monad::Either::Success.new(value + 1)
-end.value == "Must be positive."
-
 
 fail unless Monad::Eventually.lift(1).value == 1
 fail unless Monad::Eventually.lift(1).bind do |value|
