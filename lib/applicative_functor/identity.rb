@@ -17,12 +17,8 @@ module ApplicativeFunctor
       end
     end
 
-    def apply(context)
-      if @value.is_a? Proc
-        context.fmap(@value)
-      else
-        fail 'value is not a Proc'
-      end
+    def apply(identity)
+      identity.fmap(@value)
     end
   end
 end

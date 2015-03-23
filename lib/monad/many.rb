@@ -10,6 +10,14 @@ module Monad
 
     attr_reader :value
 
+    def fmap(proc)
+      Many.new(@value.map(&proc))
+    end
+
+    def apply(many)
+      many.fmap @value
+    end
+
     def bind(&block)
       Many.new(@value.map(&block).map(&:value).flatten)
     end

@@ -3,14 +3,6 @@ require 'applicative_functor'
 require 'functor'
 require 'monad'
 
-
-
-fail unless Monad::Many.new([1, 2, 3]).bind do |i|
-  Monad::Many.new([i * 10, i * 100])
-end.value == [10, 100, 20, 200, 30, 300]
-fail unless Monad::Many.new([]).value == []
-
-
 fail unless Monad::Either.lift(1).value == 1
 fail unless Monad::Either.lift(-1).bind do |value|
   Monad::Either::Failure.new("Must be positive.")
