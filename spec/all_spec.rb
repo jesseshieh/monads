@@ -52,24 +52,6 @@ add1 = ->(value) {
   value + 1
 }
 
-fail unless Monad::Identity.new(3).bind do |value|
-  Monad::Identity.new(value * 2)
-end.value == 6
-
-fail unless Functor::Identity.new(5).fmap(&add1).value == 6
 
 
-i = ApplicativeFunctor::Identity.new ->(value) {
-  value + 1
-}
-j = ApplicativeFunctor::Identity.new ->(value) {
-  value * 2
-}
-k = ApplicativeFunctor::Identity.new 3
-fail unless i.apply(j).apply(k).value == 8
 
-# ApplicativeFunctor is also a functor
-a = ApplicativeFunctor::Identity.new 4
-fail unless a.fmap(->(value) {
-  value / 2
-}).value == 2
