@@ -3,15 +3,6 @@ require 'applicative_functor'
 require 'functor'
 require 'monad'
 
-fail unless Monad::Maybe.lift(1).bind do |value|
-  Monad::Maybe.lift(value + 1)
-end.value == 2
-
-fail unless Monad::Maybe.lift(nil).bind do |value|
-  Monad::Maybe.lift(value + 1)
-end.value == nil
-
-fail unless Monad::Maybe.lift(1).value == 1
 
 
 fail unless Monad::Many.new([1, 2, 3]).bind do |i|
@@ -89,4 +80,17 @@ end.value == 6
 fail unless Functor::Identity.new(5).fmap(&add1).value == 6
 
 
-fail unless ApplicativeFunctor::Identity.new(&add1).fmap(&add1).value(6) == 8
+i = ApplicativeFunctor::Identity.new ->(value) {
+  value + 1
+}
+j = ApplicativeFunctor::Identity.new ->(value) {
+  value * 2
+}
+k = ApplicativeFunctor::Identity.new 3
+fail unless i.apply(j).apply(k).value == 8
+
+# ApplicativeFunctor is also a functor
+a = ApplicativeFunctor::Identity.new 4
+fail unless a.fmap(->(value) {
+  value / 2
+}).value == 2

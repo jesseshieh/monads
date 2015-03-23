@@ -10,6 +10,22 @@ module Monad
 
     attr_reader :value
 
+    def fmap(proc)
+      if @value.nil?
+        self
+      else
+        Maybe.new(proc.call(@value))
+      end
+    end
+
+    def apply(maybe)
+      if @value.nil?
+        self
+      else
+        maybe.fmap @value
+      end
+    end
+
     def bind(&block)
       if @value.nil?
         self

@@ -1,18 +1,28 @@
 module ApplicativeFunctor
   class Identity
-    def initialize(&block)
-      @block = block
+    def initialize(value)
+      @value = value
     end
 
-    def fmap(&block)
-      Identity.new do |value|
-        new_value = @block.call(value)
-        block.call(new_value)
+    attr_reader :value
+
+    def fmap(proc)
+      if @value.is_a? Proc
+        Identity.new(->(value) {
+          # compose them
+          @value.call(proc.call(value))
+        })
+      else
+        Identity.new(proc.call(@value))
       end
     end
 
-    def value(value)
-      @block.call(value)
+    def apply(context)
+      if @value.is_a? Proc
+        context.fmap(@value)
+      else
+        fail 'value is not a Proc'
+      end
     end
   end
 end
