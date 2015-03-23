@@ -1,6 +1,5 @@
 require 'monad/eventually'
 
-# TODO: This is all messed up. This clearly isn't correct.
 fail unless Monad::Eventually.lift(1).run == 1
 fail unless Monad::Eventually.lift(1).bind do |value|
   Monad::Eventually.new -> {
